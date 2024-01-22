@@ -1,6 +1,7 @@
 from telegram import Update
-from telegram.ext import Application, ContextTypes
+from telegram.ext import ContextTypes
 from datetime import time
+import utils.requisiton as rq
 import pytz
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -10,18 +11,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
           text="Hi! Thanks for subscribing to Quoach BOT. \n\nUse /set to define the hour of the day in which you want to receive a motivational quote."
     )
 
-# async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # await context.bot.send_message(
-        # chat_id=update.effective_chat.id,
-        # text=update.message.text
-    # )
-
 async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends the quote to the user."""
     job = context.job
+    content = await rq.get_random_quote()
+    statement = content[0]
+    thinker = content[1]
     await context.bot.send_message(
         job.chat_id,
-        text=f'Você é forte e nada te abalará.'
+        text=f'"{statement}"\n\n- {thinker}'
     )
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -43,7 +41,7 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chosen_time = context.args[0]
         chosen_time = chosen_time.split(':')
         hours = int(chosen_time[0])
-        minutes = int(chosen_time[1])
+        minutes = int(chosen_time[1].zfill(2)) #zfill adds zero on the left case < 10.
 
         if hours>24 or hours<0:
             await update.effective_message.reply_text("Please, enter a valid positive value for hours.")
@@ -64,7 +62,6 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     except(IndexError, ValueError):
         await update.effective_message.reply_text("Usage: /set <hrs>:<mins>")
-
 
 async def unset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Remove the job if the user changed their mind."""
