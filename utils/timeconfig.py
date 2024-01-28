@@ -1,12 +1,58 @@
 import pytz
 def get_hours(timezone):
     match timezone:
-        case 'America - PST':
+        case '-11':
+            return 'Etc/GMT-11'
+        case '-10':
+            return 'Etc/GMT-11'
+        case '-9':
+            return 'Etc/GMT-11'
+        case '-8':
+            return 'Etc/GMT-11'
+        case '-7':
             return 'US/Pacific'
-        case 'Brazil - BRT':
-            return 'America/Sao_Paulo'
-        case 'Europe - GMT':
+        case '-6':
+            return 'Etc/Greenwich'
+        case '-5':
+            return 'Etc/Greenwich'
+        case '-4':
+            return 'Etc/Greenwich'
+        case '-3':
+            return 'Etc/Greenwich'
+        case '-2':
+            return 'Etc/Greenwich'
+        case '-1':
+            return 'Europe/Berlin'
+        case '0':
+            return 'Etc/Greenwich'
+        case '+1':
+            return 'Etc/Greenwich'
+        case '+2':
+            return 'Etc/Greenwich'
+        case '+3':
+            return 'Etc/Greenwich'
+        case '+4':
+            return 'Etc/Greenwich'
+        case '+5':
+            return 'Etc/Greenwich'
+        case '+6':
+            return 'Etc/Greenwich'
+        case '+7':
+            return 'Etc/Greenwich'
+        case '+8':
+            return 'Etc/Greenwich'
+        case '+9':
+            return 'Etc/Greenwich'
+        case '+10':
+            return 'Etc/Greenwich'
+        case '+11':
+            return 'Etc/Greenwich'
+        case '+12':
+            return 'Etc/Greenwich'
+        case '+13':
+            return 'Etc/Greenwich'
+        case '+14':
             return 'Etc/Greenwich'
 
-# print(pytz.all_timezones)
+print(pytz.all_timezones)
 

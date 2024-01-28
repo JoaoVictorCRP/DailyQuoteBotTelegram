@@ -2,7 +2,7 @@ from telegram import Update, ReplyKeyboardMarkup, InputFile
 from telegram.ext import ContextTypes,CallbackContext, ConversationHandler
 from datetime import time
 import utils.requisiton as rq
-import pytz
+import pytz, re
 from time import sleep
 from utils import timeconfig
 
@@ -22,7 +22,7 @@ async def start(update: Update, context: CallbackContext) -> int:
         await update.message.reply_photo(timezone_map, caption="Timezone Map")
 
     await update.message.reply_text(
-        "First things first, let's select your timezone.\nUse the Timezone Map above to view your country's timezone.",
+        "First things first, let's select your timezone.\nUse the Timezone Map above to view your location's timezone.",
     ) 
 
     return SELECT_TIMEZONE
@@ -30,9 +30,16 @@ async def start(update: Update, context: CallbackContext) -> int:
 async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     user_timezone = update.message.text
-    context.user_data['timezone'] = timeconfig.get_hours(user_timezone) # Storing the selected tz
+    timezone_validation = re.search(r"[a-zA-Z]",user_timezone)
+
+    if not (timezone_validation is None) or (int(user_timezone) < -11 or int(user_timezone) > 14):
+        print(f'{timezone_validation}, input was: {user_timezone}')
+        await update.message.reply_text('Please, insert a valid UTC timezone (between -11 and +14)')
+        return
+    
+    context.user_data['timezone'] = f'Etc/GMT{user_timezone}'  #timeconfig.get_hours(user_timezone) # Storing the selected tz
     await update.message.reply_text(
-        f'Great choice! Your timezone is now set to {user_timezone}.\nYou may now use /set to define the moment of your daily message.'
+        f'Great choice! Your timezone is now set to UTC{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
     )
 
     return ConversationHandler.END
