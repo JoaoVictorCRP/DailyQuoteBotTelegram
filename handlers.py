@@ -1,8 +1,9 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, ReplyKeyboardMarkup, InputFile
 from telegram.ext import ContextTypes,CallbackContext, ConversationHandler
 from datetime import time
 import utils.requisiton as rq
 import pytz
+from time import sleep
 from utils import timeconfig
 
 SELECT_TIMEZONE = 1
@@ -11,19 +12,18 @@ SELECT_TIMEZONE = 1
 async def start(update: Update, context: CallbackContext) -> int:
     """Starting command, the bot explains its funtionality."""
     user = update.effective_user
-    reply_keyboard = [["America/Sao_Paulo","US/Pacific", "Etc/Greenwich",]]
+    # reply_keyboard = [["-9","-8","-7","-6","-5","-4", 
+                    #    "-3","-2","-1","0","1","2"]]
+    
+    # ^^^ AWFUL!
 
-    await update.message.reply_text(f'Hello {user.first_name}, Thanks for subscribing to Quoach BOT."')
-
-    with open('./images/utc_map.png') as timezone_map:
-        update.message.reply_photo(timezone_map, caption="Timezone Map")
+    await update.message.reply_text(f'Hello {user.first_name}, Thank you for subscribing to Quoach BOT.')
+    with open('images/utc_map.png', 'rb') as timezone_map:
+        await update.message.reply_photo(timezone_map, caption="Timezone Map")
 
     await update.message.reply_text(
-        "\nFirst things first, let's select your timezone.",
-        reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard, one_time_keyboard=True, input_field_placeholder="Timezone"
-        ),
-    )
+        "First things first, let's select your timezone.\nUse the Timezone Map above to view your country's timezone.",
+    ) 
 
     return SELECT_TIMEZONE
 

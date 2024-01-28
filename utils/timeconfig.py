@@ -8,5 +8,5 @@ def get_hours(timezone):
         case 'Europe - GMT':
             return 'Etc/Greenwich'
 
-print(pytz.all_timezones)
+# print(pytz.all_timezones)
 
