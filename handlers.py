@@ -11,10 +11,14 @@ SELECT_TIMEZONE = 1
 async def start(update: Update, context: CallbackContext) -> int:
     """Starting command, the bot explains its funtionality."""
     user = update.effective_user
-    reply_keyboard = [["Brazil - BRT","America - PST", "Europe - GMT"]]
+    reply_keyboard = [["America/Sao_Paulo","US/Pacific", "Etc/Greenwich",]]
+
+    await update.message.reply_text(f'Hello {user.first_name}, Thanks for subscribing to Quoach BOT."')
+
+    with open('./images/utc_map.png') as timezone_map:
+        update.message.reply_photo(timezone_map, caption="Timezone Map")
 
     await update.message.reply_text(
-        f"Hello {user.first_name}, Thanks for subscribing to Quoach BOT."
         "\nFirst things first, let's select your timezone.",
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True, input_field_placeholder="Timezone"
@@ -22,17 +26,13 @@ async def start(update: Update, context: CallbackContext) -> int:
     )
 
     return SELECT_TIMEZONE
-    # await context.bot.send_message(
-    #     chat_id=update.effective_chat.id,
-    #       text=f'Hello {user.first_name}, Thanks for subscribing to Quoach BOT. \n\nUse /set to define the hour of the day in which you want to receive a motivational quote.'
-    # )
 
 async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     user_timezone = update.message.text
-    context.user_data['timezone'] = user_timezone # Storing the selected tz
+    context.user_data['timezone'] = timeconfig.get_hours(user_timezone) # Storing the selected tz
     await update.message.reply_text(
-        f"Great choice! Your timezone is now set to {user_timezone}. You can now proceed with other commands."
+        f'Great choice! Your timezone is now set to {user_timezone}.\nYou may now use /set to define the moment of your daily message.'
     )
 
     return ConversationHandler.END
@@ -69,7 +69,7 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chosen_time = context.args[0]
         chosen_time = chosen_time.split(':')
         hours = int(chosen_time[0])
-        minutes = int(chosen_time[1].zfill(2)) #zfill adds zero on the left case < 10.
+        minutes = int(chosen_time[1]) #zfill adds zero on the left case < 10.
 
         if hours>24 or hours<0:
             await update.effective_message.reply_text("Please, enter a valid positive value for hours.")
@@ -78,12 +78,11 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.effective_message.reply_text("Please, enter a valid positive value for minutes.")
         
         job_removed = remove_job_if_exists(str(chat_id), context)
-        user_timezone = timeconfig.get_hours(context.user_data['timezone'])
-        tz = pytz.timezone(user_timezone)
+        tz = pytz.timezone(context.user_data['timezone'])
 
         context.job_queue.run_daily(quote, time=time(hour=hours, minute=minutes, tzinfo=tz), chat_id=chat_id, name=str(chat_id)) 
 
-        text= f'Daily motivational quote scheduled for {hours}:{minutes} in the {user_timezone} timezone.'
+        text= f'Daily motivational quote scheduled for {hours}:{str(minutes).zfill(2)} in the {tz} timezone.'
         if job_removed:
             text += "Old one was removed!"
         await update.effective_message.reply_text(text)

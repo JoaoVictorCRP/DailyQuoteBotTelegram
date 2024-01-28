@@ -1,14 +1,4 @@
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    ContextTypes,
-    ConversationHandler,
-    MessageHandler,
-    filters,
-)
 import pytz
-
 def get_hours(timezone):
     match timezone:
         case 'America - PST':
@@ -18,5 +8,5 @@ def get_hours(timezone):
         case 'Europe - GMT':
             return 'Etc/Greenwich'
 
-# print(pytz.all_timezones)
+print(pytz.all_timezones)
 
