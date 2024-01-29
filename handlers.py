@@ -1,6 +1,6 @@
 from telegram import Update, ReplyKeyboardMarkup, InputFile
 from telegram.ext import ContextTypes,CallbackContext, ConversationHandler
-from datetime import time
+from datetime import time, datetime
 import utils.requisiton as rq
 import pytz, re
 from time import sleep
@@ -12,10 +12,6 @@ SELECT_TIMEZONE = 1
 async def start(update: Update, context: CallbackContext) -> int:
     """Starting command, the bot explains its funtionality."""
     user = update.effective_user
-    # reply_keyboard = [["-9","-8","-7","-6","-5","-4", 
-                    #    "-3","-2","-1","0","1","2"]]
-    
-    # ^^^ AWFUL!
 
     await update.message.reply_text(f'Hello {user.first_name}, Thank you for subscribing to Quoach BOT.')
     with open('images/utc_map.png', 'rb') as timezone_map:
@@ -32,12 +28,19 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     user_timezone = update.message.text
     timezone_validation = re.search(r"[a-zA-Z]",user_timezone)
 
+    
     if not (timezone_validation is None) or (int(user_timezone) < -11 or int(user_timezone) > 14):
         print(f'{timezone_validation}, input was: {user_timezone}')
         await update.message.reply_text('Please, insert a valid UTC timezone (between -11 and +14)')
         return
+    else:
+        # The Pytz library inverts the GMT Map, so this conditional block intends to solve this problem.
+        if '-' in user_timezone:
+            user_timezone = user_timezone.replace('-','+')
+        else:
+            user_timezone = user_timezone.replace('+','-')
     
-    context.user_data['timezone'] = f'Etc/GMT{user_timezone}'  #timeconfig.get_hours(user_timezone) # Storing the selected tz
+    context.user_data['timezone'] = f'Etc/GMT{(user_timezone)}'  #timeconfig.get_hours(user_timezone) # Storing the selected tz
     await update.message.reply_text(
         f'Great choice! Your timezone is now set to UTC{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
     )
@@ -86,6 +89,11 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         job_removed = remove_job_if_exists(str(chat_id), context)
         tz = pytz.timezone(context.user_data['timezone'])
+        
+        # Debugging purpose:
+        now_in_tz = datetime.now(tz)
+        print(f"Current time in {tz}: {now_in_tz.strftime('%Y-%m-%d %H:%M:%S')}")
+
 
         context.job_queue.run_daily(quote, time=time(hour=hours, minute=minutes, tzinfo=tz), chat_id=chat_id, name=str(chat_id)) 
 

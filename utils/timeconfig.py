@@ -54,5 +54,6 @@ def get_hours(timezone):
         case '+14':
             return 'Etc/Greenwich'
 
-print(pytz.all_timezones)
+for tz in pytz.all_timezones:
+    print(f'{tz}\n')
 
