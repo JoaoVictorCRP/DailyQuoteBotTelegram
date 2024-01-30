@@ -33,13 +33,7 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
         print(f'{timezone_validation}, input was: {user_timezone}')
         await update.message.reply_text('Please, insert a valid UTC timezone (between -11 and +14)')
         return
-    else:
-        # The Pytz library inverts the GMT Map, so this conditional block intends to solve this problem.
-        if '-' in user_timezone:
-            user_timezone = user_timezone.replace('-','+')
-        else:
-            user_timezone = user_timezone.replace('+','-')
-    
+
     context.user_data['timezone'] = f'Etc/GMT{(user_timezone)}'  #timeconfig.get_hours(user_timezone) # Storing the selected tz
     await update.message.reply_text(
         f'Great choice! Your timezone is now set to UTC{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
