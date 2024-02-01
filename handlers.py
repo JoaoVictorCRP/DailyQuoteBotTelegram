@@ -4,7 +4,6 @@ from datetime import time, datetime
 import utils.requisiton as rq
 import pytz, re
 from time import sleep
-from utils import timeconfig
 
 SELECT_TIMEZONE = 1
 
@@ -27,19 +26,26 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     user_timezone = update.message.text
 
-    misplaced_signal = re.search('[+-]$', user_timezone) # if user inputs "3+", for example.
-    if misplaced_signal:
-        print(f'entering conditional, value is {user_timezone}')
-        user_timezone = f'{misplaced_signal[0]}{user_timezone[:1]}' #replacing the order
-        print(f'leaving conditional, value is {user_timezone}')
+    # misplaced_signal = re.search('[+-]', user_timezone) # if user inputs "3+", for example.
+    # if misplaced_signal:
+    #     print(f'entering conditional, value is {user_timezone}')
+    #     user_timezone = f'{misplaced_signal[0]}{user_timezone[:1]}' #replacing the order
+    #     print(f'leaving conditional, value is {user_timezone}')
     
-    timezone_validation = re.match(r'[+-]+\d',user_timezone)
-    if (timezone_validation is None) or (int(user_timezone) < -11 or int(user_timezone) > 14):
+    timezone_validation = re.search(r'[+-]?\d{1,2}',user_timezone)
+    if (timezone_validation is None):
         print(f'{timezone_validation}, input was: {user_timezone}')
-        await update.message.reply_text('Please, insert a valid UTC timezone (between -11 and +14)')
+        await update.message.reply_text('Please, insert a valid UTC timezone.')
         return
+    
+    user_timezone = timezone_validation[0]
 
-    context.user_data['timezone'] = f'Etc/GMT{(user_timezone)}'  #timeconfig.get_hours(user_timezone) # Storing the selected tz
+    if int(user_timezone) < -11 or int(user_timezone) > 14:
+        await update.message.reply_text('Sorry, timezone must be between -11 and +14')
+        return
+    
+    print(f'user tz value: {user_timezone}')
+    context.user_data['timezone'] = f'Etc/GMT{(user_timezone)}'
     await update.message.reply_text(
         f'Great choice! Your timezone is now set to UTC{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
     )
