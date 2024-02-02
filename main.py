@@ -24,11 +24,13 @@ if __name__ == '__main__':
     )
     set_handler = CommandHandler('set', handlers.set_time)
     unset_handler = CommandHandler('unset', handlers.unset)
+    quote_handler = CommandHandler('quote', handlers.loose_quote)
     unknown_handler = MessageHandler(filters.COMMAND, handlers.unknown)
 
     application.add_handler(timezone_handler)
     application.add_handler(set_handler)
     application.add_handler(unset_handler)
+    application.add_handler(quote_handler)
     application.add_handler(unknown_handler) # this must be the last handler, works as a fallback.
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 

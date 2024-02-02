@@ -53,13 +53,23 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends the quote to the user."""
+    """Sends random quote to the user."""
     job = context.job
     content = await rq.get_random_quote()
     statement = content[0]
     thinker = content[1]
     await context.bot.send_message(
         job.chat_id,
+        text=f'"{statement}"\n\n- {thinker}'
+    )
+
+async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Random quote sender, not related to schedule."""
+    content = await rq.get_random_quote()
+    statement = content[0]
+    thinker = content[1]
+    await context.bot.send_message(
+        update.effective_chat.id,
         text=f'"{statement}"\n\n- {thinker}'
     )
 
