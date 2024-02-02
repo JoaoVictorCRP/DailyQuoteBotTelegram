@@ -65,13 +65,24 @@ async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Random quote sender, not related to schedule."""
-    content = await rq.get_random_quote()
-    statement = content[0]
-    thinker = content[1]
-    await context.bot.send_message(
-        update.effective_chat.id,
-        text=f'"{statement}"\n\n- {thinker}'
-    )
+    try:
+        if context.args: # If args where passed...
+            content = await rq.get_random_quote(context.args[0])
+        else:
+            print('else was hitted') 
+            content = await rq.get_random_quote()
+        statement = content[0]
+        thinker = content[1]
+        await context.bot.send_message(
+            update.effective_chat.id,
+            text=f'"{statement}"\n\n- {thinker}'
+        )
+    except:
+        await context.bot.send_message(
+            update.effective_chat.id,
+            text=f'Please, select a valid quote theme!'
+        )
+
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     """Remove job with given name. Return whether job was removed."""
