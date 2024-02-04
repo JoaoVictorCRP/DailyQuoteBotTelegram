@@ -33,6 +33,3 @@ if __name__ == '__main__':
     application.add_handler(quote_handler)
     application.add_handler(unknown_handler) # this must be the last handler, works as a fallback.
     application.run_polling(allowed_updates=Update.ALL_TYPES)
-
-
-    # Even though all timezones are working correctly, the bot isn't sending the message in the scheduled time, MUST CHECK IT!

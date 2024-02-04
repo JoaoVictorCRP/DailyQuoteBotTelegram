@@ -2,3 +2,4 @@
 
 ## TODO:
 * Options for quote category/theme.
+* /help (command list)

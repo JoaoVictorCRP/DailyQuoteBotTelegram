@@ -78,11 +78,11 @@ async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text=f'"{statement}"\n\n- {thinker}'
         )
     except:
+        tag_list = await rq.get_quote_themes()
         await context.bot.send_message(
             update.effective_chat.id,
-            text=f'Please, select a valid quote theme!'
+            text=f'Please, select a valid quote theme! You can choose from:\n {"".join(theme for theme in tag_list)}'
         )
-
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     """Remove job with given name. Return whether job was removed."""
