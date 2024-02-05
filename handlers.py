@@ -26,15 +26,9 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     user_timezone = update.message.text
 
-    # misplaced_signal = re.search('[+-]', user_timezone) # if user inputs "3+", for example.
-    # if misplaced_signal:
-    #     print(f'entering conditional, value is {user_timezone}')
-    #     user_timezone = f'{misplaced_signal[0]}{user_timezone[:1]}' #replacing the order
-    #     print(f'leaving conditional, value is {user_timezone}')
-    
     timezone_validation = re.search(r'[+-]?\d{1,2}',user_timezone)
     if (timezone_validation is None):
-        print(f'{timezone_validation}, input was: {user_timezone}')
+        print(f'{timezone_validation}, input was: {user_timezone}') #Debugging purpose
         await update.message.reply_text('Please, insert a valid UTC timezone.')
         return
     
