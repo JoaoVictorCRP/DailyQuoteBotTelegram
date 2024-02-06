@@ -41,3 +41,17 @@ async def get_quote_themes():
     except requests.exceptions.RequestException as e:
         print(f'Request failed: {e}')
         return []
+    
+help_text = 'Welcome to Quoach BOT, your personal motivational quote companion!\n\
+      \nHere are the available commands:\
+      \n/start - Start your journey with Quoach BOT by selecting your timezone. This is essential for scheduling your daily motivational quote.\
+      \n/set - Set the hour to receive your daily dose of inspiration. Choose the time that suits you best and let Quoach BOT send you uplifting messages every day.\
+      \n/unset - If you wish to change the scheduled time or stop receiving daily quotes, use this command to unschedule your quote timer.\
+      \n/quote - Instantly receive a motivational quote! You can also specify a theme, such as "/quote love" for quotes related to love. If no theme is provided, a random quote will be sent.\
+\n\nExample usage:\
+\n- "/start" - Begin your Quoach experience.\
+\n- "/set 18:30" - Schedule your daily quote for 6:30 PM.\
+\n- "/unset" - Stop receiving daily quotes.\
+\n- "/quote" - Get an immediate inspirational quote.\
+\n- "/quote success" - Receive a motivational quote about success.\n\
+\nFeel free to explore and enjoy the positive vibes from Quoach BOT! 🌟'

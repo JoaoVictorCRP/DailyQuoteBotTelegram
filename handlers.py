@@ -7,7 +7,7 @@ from time import sleep
 
 SELECT_TIMEZONE = 1
 
-
+# Starting Handlers
 async def start(update: Update, context: CallbackContext) -> int:
     """Starting command, the bot explains its funtionality."""
     user = update.effective_user
@@ -21,7 +21,6 @@ async def start(update: Update, context: CallbackContext) -> int:
     ) 
 
     return SELECT_TIMEZONE
-
 async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     user_timezone = update.message.text
@@ -45,7 +44,14 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     )
 
     return ConversationHandler.END
+async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ List the bot's commands and it's funtionalities. """
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f'{rq.help_text}'
+    )
 
+# Main Handlers
 async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends random quote to the user."""
     job = context.job
@@ -56,7 +62,6 @@ async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
         job.chat_id,
         text=f'"{statement}"\n\n- {thinker}'
     )
-
 async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Random quote sender, not related to schedule."""
     try:
@@ -78,6 +83,7 @@ async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text=f'Please, select a valid quote theme! You can choose from:\n {"".join(theme for theme in tag_list)}'
         )
 
+# Configuration Handlers
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     """Remove job with given name. Return whether job was removed."""
     current_jobs = context.job_queue.get_jobs_by_name(name)
@@ -86,7 +92,6 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     for job in current_jobs:
         job.schedule_removal() # Removing each job.
     return True
-
 async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Add daily job to the queue."""
     chat_id = update.effective_message.chat_id
@@ -124,15 +129,14 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     except(IndexError, ValueError):
         await update.effective_message.reply_text("Usage: /set <hrs>:<mins>")
-
 async def unset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Remove the job if the user changed their mind."""
     chat_id = update.message.chat_id
     job_removed = remove_job_if_exists(str(chat_id), context)
     text = 'Daily quote successfully removed!' if job_removed else "You don't have any setted jobs."
     await update.message.reply_text(text)
-    
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ Triggers when the user sends an unknown command."""
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text= f'"{update.message.text}" is not a valid command.'
