@@ -1,11 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes,CallbackContext, ConversationHandler
-from datetime import time, datetime
 import utils.requisiton as rq
-import pytz, re
-from time import sleep
-
-SELECT_TIMEZONE = 1
+SELECT_TIMEZONE = 1 #Conversation variable
 
 # Starting Handlers
 async def start(update: Update, context: CallbackContext) -> int:
@@ -23,8 +19,9 @@ async def start(update: Update, context: CallbackContext) -> int:
     return SELECT_TIMEZONE
 async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
+    import re
+    
     user_timezone = update.message.text
-
     timezone_validation = re.search(r'[+-]?\d{1,2}',user_timezone)
     if (timezone_validation is None):
         print(f'{timezone_validation}, input was: {user_timezone}') #Debugging purpose
@@ -94,6 +91,9 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     return True
 async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Add daily job to the queue."""
+    import pytz
+    from datetime import time, datetime
+    
     chat_id = update.effective_message.chat_id
     if 'timezone' not in context.user_data:
         await update.effective_message.reply_text('Please use /start to set your timezone first')

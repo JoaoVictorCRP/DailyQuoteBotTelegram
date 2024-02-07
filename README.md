@@ -1,4 +1,4 @@
 # QUOACH - A Telegram Bot that sends you motivational quotes everyday! 🤖🚀🍀
 
 ## TODO:
-* /help (command list)
+* Edit the timezone map (Must have a bigger font)
