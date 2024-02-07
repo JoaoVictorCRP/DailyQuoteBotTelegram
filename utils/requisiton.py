@@ -1,46 +1,40 @@
 import requests
+from config import quotes_api_token
 
 async def get_random_quote(theme_arg=None):
+    from random import randint
     if not theme_arg:
-        theme_arg = 'famous-quotes|life|inspirational'
+        default_themes = ['life', 'success', 'attitude', 'change', 'great', 'inspirational'] # Themes for scheduled quotes
+        theme_arg = default_themes[randint(0,len(default_themes)-1)]
 
-    url = f'https://api.quotable.io/quotes/random?tags={theme_arg}'
-
+    url = f'https://api.api-ninjas.com/v1/quotes?category={theme_arg}'
     print(f'QUOTE THEME IS: {theme_arg}')
-
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers={'X-Api-Key': quotes_api_token})
         response.raise_for_status() #Raise exception for HTTP errors
         data = response.json()[0]
         if not data:
             raise Exception('Invalid theme.')
-        quote = data['content']
-        author = data["author"]
-        return [quote,author]
+        quote = data['quote']
+        author = data['author']
+        return [quote, author]
     
     except requests.exceptions.RequestException as e:
         print(f'Error while making API request: {e}')
 
 async def get_quote_themes():
-    url = 'https://api.quotable.io/tags'
-    themes = []
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
-        
-        for i in range(0,len(data)-2):
-            tag_name = data[i]["name"]
-            tag_size = data[i]['quoteCount']
-            if tag_size>1: # Some of the tags in this API stores NO phrases at all... others just a single one. Let's filter this! 
-                themes.append(f'\n- {tag_name}')
-        
-        themes.append(f'\n- Work') # There's a bug in the tag list that makes the 'Work' tag appears 2 times at the end of the list.
-        return themes
-    except requests.exceptions.RequestException as e:
-        print(f'Request failed: {e}')
-        return []
+    themes = [
+        "- Age\n", "- Alone\n", "- Amazing\n", "- Anger\n", "- Architecture\n", "- Art\n", "- Attitude\n", "- Beauty\n", 
+        "- Best\n", "- Birthday\n", "- Business\n", "- Car\n", "- Change\n", "- Communication\n", "- Computers\n", 
+        "- Cool\n", "- Courage\n", "- Dad\n", "- Dating\n", "- Death\n", "- Design\n", "- Dreams\n", "- Education\n", 
+        "- Environmental\n", "- Equality\n", "- Experience\n", "- Failure\n", "- Faith\n", "- Family\n", "- Famous\n", 
+        "- Fear\n", "- Fitness\n", "- Food\n", "- Forgiveness\n", "- Freedom\n", "- Friendship\n", "- Funny\n", "- Future\n", 
+        "- God\n", "- Good\n", "- Government\n", "- Graduation\n", "- Great\n", "- Happiness\n", "- Health\n", "- History\n", 
+        "- Home\n", "- Hope\n", "- Humor\n", "- Imagination\n", "- Inspirational\n", "- Intelligence\n", "- Jealousy\n", 
+        "- Knowledge\n", "- Leadership\n", "- Learning\n", "- Legal\n", "- Life\n", "- Love\n", "- Marriage\n", "- Medical\n", 
+        "- Men\n", "- Mom\n", "- Money\n", "- Morning\n", "- Movies\n", "- Success\n"
+    ]
+    return themes
     
 help_text = 'Welcome to Quoach BOT, your personal motivational quote companion!\n\
       \nHere are the available commands:\

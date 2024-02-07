@@ -1,9 +1,9 @@
-from config import api_token
+from config import telegram_api_token
 import logging
 import handlers
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ConversationHandler
-token = api_token
+token = telegram_api_token
 
 
 logging.basicConfig(
