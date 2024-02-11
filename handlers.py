@@ -9,7 +9,7 @@ async def start(update: Update, context: CallbackContext) -> int:
     user = update.effective_user
 
     await update.message.reply_text(f'Hello {user.first_name}, Thank you for subscribing to Quoach BOT.')
-    with open('images/utc_map.png', 'rb') as timezone_map:
+    with open('images/GMT_map.png', 'rb') as timezone_map:
         await update.message.reply_photo(timezone_map, caption="Timezone Map")
 
     await update.message.reply_text(
@@ -25,19 +25,19 @@ async def select_timezone(update: Update, context: CallbackContext) -> int:
     timezone_validation = re.search(r'[+-]?\d{1,2}',user_timezone)
     if (timezone_validation is None):
         print(f'{timezone_validation}, input was: {user_timezone}') #Debugging purpose
-        await update.message.reply_text('Please, insert a valid UTC timezone.')
+        await update.message.reply_text('Please, insert a valid GMT timezone.')
         return
     
     user_timezone = timezone_validation[0]
 
-    if int(user_timezone) < -11 or int(user_timezone) > 14:
-        await update.message.reply_text('Sorry, timezone must be between -11 and +14')
+    if int(user_timezone) < -11 or int(user_timezone) > 12:
+        await update.message.reply_text('Sorry, timezone must be between -12 and +11')
         return
     
     print(f'user tz value: {user_timezone}')
     context.user_data['timezone'] = f'Etc/GMT{(user_timezone)}'
     await update.message.reply_text(
-        f'Great choice! Your timezone is now set to UTC{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
+        f'Great choice! Your timezone is now set to GMT{user_timezone}.\nYou may now use /set to define the moment of your daily message.'
     )
 
     return ConversationHandler.END
