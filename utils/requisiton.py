@@ -1,4 +1,4 @@
-async def get_random_quote(theme_arg=None):
+async def get_random_quote(theme_arg=None) -> list:
     import requests
     from config import quotes_api_token
     
@@ -20,7 +20,7 @@ async def get_random_quote(theme_arg=None):
     except requests.exceptions.RequestException as e:
         print(f'Error while making API request: {e}')
 
-async def get_quote_themes():
+async def get_quote_themes() -> list:
     themes = [
         "- Age\n", "- Alone\n", "- Amazing\n", "- Anger\n", "- Architecture\n", "- Art\n", "- Attitude\n", "- Beauty\n", 
         "- Best\n", "- Birthday\n", "- Business\n", "- Car\n", "- Change\n", "- Communication\n", "- Computers\n", 
