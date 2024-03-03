@@ -1,4 +1,3 @@
-# from config import telegram_api_token
 import logging, handlers, os
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ConversationHandler
