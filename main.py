@@ -1,9 +1,11 @@
-from config import telegram_api_token
-import logging
-import handlers
+# from config import telegram_api_token
+import logging, handlers, os
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ConversationHandler
-token = telegram_api_token
+from dotenv import load_dotenv
+
+load_dotenv()
+TELEGRAM_API_KEY = os.getenv('TELEGRAM_API_KEY')
 
 
 logging.basicConfig(
@@ -14,7 +16,7 @@ logging.getLogger('httpx').setLevel(logging.WARNING) # Logging only important th
 
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token(token).build()
+    application = ApplicationBuilder().token(TELEGRAM_API_KEY).build()
     
     timezone_handler = ConversationHandler(
         entry_points=[CommandHandler('start', handlers.start)],

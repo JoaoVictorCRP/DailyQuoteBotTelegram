@@ -1,7 +1,13 @@
 from telegram import Update
 from telegram.ext import ContextTypes,CallbackContext, ConversationHandler
 import utils.requisiton as rq
+from dotenv import load_dotenv
+import os
+
 SELECT_TIMEZONE: int = 1 #Conversation variable
+
+load_dotenv()
+QUOTES_API_KEY = os.getenv('QUOTES_API_KEY')
 
 # Starting Handlers
 async def start(update: Update, context: CallbackContext) -> None:
@@ -52,7 +58,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends random quote to the user."""
     job: ContextTypes = context.job
-    content: list = await rq.get_random_quote()
+    content: list = await rq.get_random_quote(quotes_api_token=QUOTES_API_KEY)
     statement: str = content[0]
     thinker: str = content[1]
     await context.bot.send_message(
@@ -63,10 +69,10 @@ async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     """Random quote sender, not related to schedule."""
     try:
         if context.args: # If args where passed...
-            content: list = await rq.get_random_quote(context.args[0])
+            content: list = await rq.get_random_quote(context.args[0], quotes_api_token=QUOTES_API_KEY)
         else:
             print('else was hitted') 
-            content: list = await rq.get_random_quote()
+            content: list = await rq.get_random_quote(quotes_api_token=QUOTES_API_KEY)
         statement: str = content[0]
         thinker: str = content[1]
         await context.bot.send_message(

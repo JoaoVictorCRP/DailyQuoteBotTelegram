@@ -1,9 +1,12 @@
-async def get_random_quote(theme_arg=None) -> list:
+async def get_random_quote(theme_arg=None, quotes_api_token=None) -> list:
     import requests
-    from config import quotes_api_token
     
     if not theme_arg:
         theme_arg = 'inspirational' #Default theme
+
+    if not quotes_api_token:
+        print("Quotes API Token wasn't send.")
+        return
 
     url = f'https://api.api-ninjas.com/v1/quotes?category={theme_arg}'
     print(f'QUOTE THEME IS: {theme_arg}')
