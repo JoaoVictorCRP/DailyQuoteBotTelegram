@@ -1,4 +1,4 @@
-# Quoach - A Telegram Bot that sends you motivational quotes everyday! 🤖🚀🍀
+# DailyQuoteBot is a Telegram Bot that sends you motivational quotes everyday! 🤖🚀🍀
 
 Quoach is a motivational quote bot designed to inspire and uplift users with daily doses of wisdom and positivity. With it, users can schedule daily motivational messages, receive random quotes on demand, and explore a variety of themed quotes to suit their mood and interests.
 
