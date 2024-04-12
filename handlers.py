@@ -14,7 +14,7 @@ async def start(update: Update, context: CallbackContext) -> None:
     """Starting command, the bot explains its funtionality."""
     user = update.effective_user
 
-    await update.message.reply_text(f'Hello {user.first_name}, Thank you for subscribing to Quoach BOT.')
+    await update.message.reply_text(f'Hello {user.first_name}, Thank you for subscribing to Daily Quote BOT.')
     with open('images/GMT_map.png', 'rb') as timezone_map:
         await update.message.reply_photo(timezone_map, caption="Timezone Map")
 

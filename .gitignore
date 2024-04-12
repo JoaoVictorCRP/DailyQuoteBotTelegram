@@ -1,2 +1,6 @@
 *.env
 **/__pycache__
+**/lib64
+lib/*
+bin/*
+*.cfg
