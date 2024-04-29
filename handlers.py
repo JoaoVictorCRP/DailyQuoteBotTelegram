@@ -23,6 +23,7 @@ async def start(update: Update, context: CallbackContext) -> None:
     ) 
 
     return SELECT_TIMEZONE
+
 async def select_timezone(update: Update, context: CallbackContext) -> int:
     """Handle selected timezone."""
     import re
@@ -65,6 +66,7 @@ async def quote(context: ContextTypes.DEFAULT_TYPE) -> None:
         job.chat_id,
         text=f'"{statement}"\n\n- {thinker}'
     )
+
 async def loose_quote(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Random quote sender, not related to schedule."""
     try:
@@ -95,6 +97,7 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     for job in current_jobs:
         job.schedule_removal() # Removing each job.
     return True
+
 async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Add daily job to the queue."""
     import pytz
@@ -135,6 +138,7 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     
     except(IndexError, ValueError):
         await update.effective_message.reply_text("Usage: /set <hrs>:<mins>")
+
 async def unset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Remove the job if the user changed their mind."""
     chat_id = update.message.chat_id
